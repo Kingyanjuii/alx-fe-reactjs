@@ -1,27 +1,43 @@
-import React from 'react'
-import AddRecipeForm from './components/AddRecipeForm'
-import RecipeList from './components/RecipeList'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useRecipeStore } from "./recipeStore"; // updated path
+import RecipeDetails from "./components/RecipeDetails";
+import { useUser } from "./UserContext";
 
-export default function App() {
+function App() {
+  const recipes = useRecipeStore((state) => state.recipes);
+  const { user } = useUser();
+
   return (
-    <div
-      style={{
-        maxWidth: 900,
-        margin: '40px auto',
-        padding: 20,
-        fontFamily: 'system-ui, -apple-system, Roboto, sans-serif',
-      }}
-    >
-      <h1>Recipe Sharing App</h1>
+    <Router>
+      <div>
+        <nav>
+          <Link to="/">Home</Link>
+        </nav>
 
-      <section style={{ marginBottom: 24 }}>
-        <AddRecipeForm />
-      </section>
+        <h1>Recipe Sharing App</h1>
+        {user ? <p>Welcome, {user.name}!</p> : <p>Please log in.</p>}
 
-      <section>
-        <h2>Recipes</h2>
-        <RecipeList />
-      </section>
-    </div>
-  )
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <h2>All Recipes</h2>
+                <ul>
+                  {recipes.map((recipe) => (
+                    <li key={recipe.id}>
+                      <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            }
+          />
+          <Route path="/recipe/:id" element={<RecipeDetails />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
+
+export default App;
