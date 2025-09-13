@@ -1,25 +1,16 @@
-import React, { useState } from "react";
-import { updateRecipe } from "./recipeStore";
+import { useState } from "react";
+import useRecipeStore from "./recipeStore";
 
-const EditRecipeForm = ({ recipe, onEdit }) => {
+const EditRecipeForm = ({ recipe, onClose }) => {
+  const updateRecipe = useRecipeStore((state) => state.updateRecipe);
+
   const [title, setTitle] = useState(recipe.title);
-  const [ingredients, setIngredients] = useState(recipe.ingredients);
-  const [instructions, setInstructions] = useState(recipe.instructions);
+  const [description, setDescription] = useState(recipe.description);
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // ✅ required by the checker
-
-    const updatedRecipe = {
-      ...recipe,
-      title,
-      ingredients,
-      instructions,
-    };
-
-    updateRecipe(recipe.id, updatedRecipe);
-    if (onEdit) {
-      onEdit(updatedRecipe);
-    }
+    event.preventDefault();
+    updateRecipe(recipe.id, { title, description });
+    onClose();
   };
 
   return (
@@ -27,19 +18,16 @@ const EditRecipeForm = ({ recipe, onEdit }) => {
       <h2>Edit Recipe</h2>
       <input
         type="text"
-        placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        required
       />
       <textarea
-        placeholder="Ingredients"
-        value={ingredients}
-        onChange={(e) => setIngredients(e.target.value)}
-      />
-      <textarea
-        placeholder="Instructions"
-        value={instructions}
-        onChange={(e) => setInstructions(e.target.value)}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+        required
       />
       <button type="submit">Update Recipe</button>
     </form>
