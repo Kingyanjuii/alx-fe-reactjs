@@ -1,26 +1,37 @@
-// src/components/recipeStore.js
+import { create } from "zustand";
 
-let recipes = [
-  { id: 1, title: "Pasta", ingredients: ["noodles", "sauce"] },
-  { id: 2, title: "Salad", ingredients: ["lettuce", "tomato", "cucumber"] }
-];
+export const useRecipeStore = create((set) => ({
+  recipes: [
+    { id: 1, title: "Pilau", description: "Spiced rice with meat" },
+    { id: 2, title: "Chapati", description: "Flatbread, soft and delicious" },
+  ],
 
-// Return all recipes
-export function getRecipes() {
-  return recipes;
-}
+  // Search + Filtering
+  searchTerm: "",
+  filteredRecipes: [],
+  setSearchTerm: (term) => set({ searchTerm: term }),
+  filterRecipes: () =>
+    set((state) => ({
+      filteredRecipes: state.recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      ),
+    })),
 
-// Add a recipe
-export function addRecipe(recipe) {
-  recipes = [...recipes, { ...recipe, id: Date.now() }];
-}
+  // CRUD
+  addRecipe: (recipe) =>
+    set((state) => ({
+      recipes: [...state.recipes, { ...recipe, id: Date.now() }],
+    })),
 
-// Update a recipe
-export function updateRecipe(id, updatedRecipe) {
-  recipes = recipes.map(r => (r.id === id ? { ...r, ...updatedRecipe } : r));
-}
+  updateRecipe: (id, updatedRecipe) =>
+    set((state) => ({
+      recipes: state.recipes.map((recipe) =>
+        recipe.id === id ? { ...recipe, ...updatedRecipe } : recipe
+      ),
+    })),
 
-// Delete a recipe
-export function deleteRecipe(id) {
-  recipes = recipes.filter(r => r.id !== id);
-}
+  deleteRecipe: (id) =>
+    set((state) => ({
+      recipes: state.recipes.filter((recipe) => recipe.id !== id),
+    })),
+}));
