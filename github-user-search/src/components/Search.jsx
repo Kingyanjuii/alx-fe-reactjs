@@ -32,53 +32,68 @@ function Search() {
   };
 
   return (
-    <div>
+    <div className="p-6">
       {/* Search Form */}
-      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-wrap gap-4 mb-6 justify-center"
+      >
         <input
           type="text"
           placeholder="GitHub username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{ padding: "10px", width: "200px", marginRight: "10px" }}
+          className="p-2 w-48 border rounded"
         />
         <input
           type="text"
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          style={{ padding: "10px", width: "150px", marginRight: "10px" }}
+          className="p-2 w-36 border rounded"
         />
         <input
           type="number"
           placeholder="Min repos"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
-          style={{ padding: "10px", width: "120px", marginRight: "10px" }}
+          className="p-2 w-28 border rounded"
         />
-        <button type="submit" style={{ padding: "10px 20px" }}>
+        <button
+          type="submit"
+          className="p-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
           Search
         </button>
       </form>
 
       {/* Conditional Rendering */}
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
 
       {userData.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {userData.map((user) => (
-            <div key={user.id} style={{ marginBottom: "20px" }}>
+            <div
+              key={user.id}
+              className="border rounded-lg p-4 text-center shadow hover:shadow-lg transition"
+            >
               <img
                 src={user.avatar_url}
                 alt={user.login}
-                width="100"
-                style={{ borderRadius: "50%" }}
+                className="w-24 h-24 rounded-full mx-auto mb-2"
               />
-              <h2>{user.name || user.login}</h2>
-              <p>Location: {user.location || "Not specified"}</p>
-              <p>Public Repos: {user.public_repos}</p>
-              <a href={user.html_url} target="_blank" rel="noopener noreferrer">
+              <h2 className="text-lg font-semibold">{user.name || user.login}</h2>
+              <p className="text-sm text-gray-500">
+                Location: {user.location || "Not specified"}
+              </p>
+              <p className="text-sm">Public Repos: {user.public_repos}</p>
+              <a
+                href={user.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline mt-2 inline-block"
+              >
                 View GitHub Profile
               </a>
             </div>
